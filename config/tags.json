@@ -1,0 +1,33 @@
+{
+  "health": [
+    "health-anxiety", "health-depression", "health-chronic-pain",
+    "health-diabetes", "health-cancer", "health-addiction",
+    "health-insomnia", "health-digestive", "health-autoimmune", "health-general"
+  ],
+  "education": [
+    "edu-bachelors", "edu-mba", "edu-phd",
+    "edu-reiki", "edu-vajra", "edu-meditation", "edu-general"
+  ],
+  "spiritual": [
+    "spirit-meditation", "spirit-reiki", "spirit-yoga",
+    "spirit-buddhism", "spirit-interfaith", "spirit-plant-medicine", "spirit-healing"
+  ],
+  "prayer": [
+    "prayer-grief", "prayer-health", "prayer-financial",
+    "prayer-relationship", "prayer-spiritual", "prayer-general"
+  ],
+  "score": ["score-1","score-2","score-3","score-4","score-5","score-6","score-7","score-8","score-9","score-10"],
+  "urgency": ["urgency-low", "urgency-medium", "urgency-high", "urgency-critical"],
+  "source": [
+    "source-meta-ad", "source-organic", "source-referral",
+    "source-email", "source-sms", "prayer-outreach-prospect"
+  ],
+  "product": [
+    "bought-tree", "bought-book", "bought-course",
+    "enrolled-bachelors", "enrolled-mba", "enrolled-phd",
+    "tree-planted", "multi-tree-buyer", "ecosystem-member",
+    "prayer-email-sent", "prayer-email-opened", "prayer-link-clicked",
+    "health-track", "spiritual-track", "business-track",
+    "high-value", "claude-error", "bounced"
+  ]
+}

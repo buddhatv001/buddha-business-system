@@ -1,0 +1,68 @@
+{
+  "prayer_funnel": {
+    "pipeline_id": "49F7RFQVknBq6KczBYgD",
+    "name": "Prayer Outreach",
+    "description": "Main prayer → tree → ecosystem funnel",
+    "stages": {
+      "new_prospect": {
+        "id": "b5cbe3d1",
+        "name": "New Prospect",
+        "description": "Just entered — prayer not yet sent"
+      },
+      "email_sent": {
+        "id": "dae768bd",
+        "name": "Email Sent",
+        "description": "Prayer email delivered"
+      },
+      "engaged": {
+        "id": "5f880417",
+        "name": "Engaged",
+        "description": "Opened email or clicked a link"
+      },
+      "tree_planted": {
+        "id": "995125f1",
+        "name": "Tree Planted",
+        "description": "Purchased at least one tree ($27)"
+      },
+      "nurture_active": {
+        "id": "baa372fb",
+        "name": "Nurture Active",
+        "description": "In active email nurture sequence"
+      },
+      "upsell_qualified": {
+        "id": "ff1c8ec1",
+        "name": "Upsell Qualified",
+        "description": "Ready for course, supplement, or degree offer"
+      },
+      "ecosystem_member": {
+        "id": "03f48700",
+        "name": "Ecosystem Member",
+        "description": "Full BDT ecosystem participant"
+      }
+    }
+  },
+  "health_pipeline": {
+    "pipeline_id": "REPLACE_HEALTH_PIPELINE_ID",
+    "name": "Health / Hospital",
+    "stages": [
+      "New Patient", "Prayer Sent", "Consult Scheduled",
+      "Consult Complete", "Treatment Plan", "Supplements", "Ongoing Care"
+    ]
+  },
+  "education_pipeline": {
+    "pipeline_id": "REPLACE_EDUCATION_PIPELINE_ID",
+    "name": "Education Enrollment",
+    "stages": [
+      "New Inquiry", "Prayer Sent", "Info Sent",
+      "Application", "Interview", "Enrolled", "Active Student", "Alumni"
+    ]
+  },
+  "tree_giving_pipeline": {
+    "pipeline_id": "REPLACE_TREE_PIPELINE_ID",
+    "name": "Tree / Giving",
+    "stages": [
+      "Donor", "Single Tree", "Tree Bundle",
+      "Monthly Donor", "Major Donor", "Peace Park Ambassador"
+    ]
+  }
+}
