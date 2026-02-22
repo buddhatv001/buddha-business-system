@@ -8,6 +8,7 @@ const { classifyApplication } = require("./classifier");
 const { buildGHLPayload } = require("./ghl-formatter");
 const { selectPrayerTemplate } = require("./prayer-router");
 const { selectProductOffer } = require("./product-router");
+const { sendTuesdayPrayer } = require("./tuesday-prayer");
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
@@ -23,7 +24,8 @@ app.get("/", (req, res) => {
       "POST /webhook/ghl — GHL form submission webhook",
       "GET  /health — Health check",
       "GET  /products — Product catalog",
-      "GET  /pipelines — Pipeline stage config"
+      "GET  /pipelines — Pipeline stage config",
+      "POST /prayer/tuesday — Send Tuesday prayer email+SMS to all prayer-request contacts"
     ]
   });
 });
@@ -169,6 +171,9 @@ function selectNurtureSequence(c) {
   if (c.primary_pipeline === "hospital") return "health-to-hospital";
   return "prayer-to-tree";
 }
+
+// Tuesday Prayer — bulk email + SMS to all prayer-request contacts
+app.post("/prayer/tuesday", sendTuesdayPrayer);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
