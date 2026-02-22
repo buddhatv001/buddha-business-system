@@ -175,6 +175,12 @@ function selectNurtureSequence(c) {
   return "prayer-to-tree";
 }
 
+// BDT Handlers (tree purchases, health classification, daily reports)
+const { handleTreePurchase, classifyHealthReply, generateDailyReport } = require('./bdt-handlers');
+app.post("/bdt/tree-purchase", handleTreePurchase);       // BDT-3: Stripe tree webhook
+app.post("/bdt/classify-health", classifyHealthReply);    // BDT-4: Health reply classifier
+app.get("/bdt/daily-report", generateDailyReport);        // BDT-6: Discord daily report
+
 // 3-Day Prayer Sequence routes
 app.post("/prayer/sunday",  sendSundayPrayer);
 app.post("/prayer/monday",  sendMondayPrayer);
