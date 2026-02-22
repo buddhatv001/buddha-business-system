@@ -9,7 +9,7 @@ const { classifyApplication } = require("./classifier");
 const { buildGHLPayload } = require("./ghl-formatter");
 const { selectPrayerTemplate } = require("./prayer-router");
 const { selectProductOffer } = require("./product-router");
-const { sendTuesdayPrayer } = require("./tuesday-prayer");
+const { sendSundayPrayer, sendMondayPrayer, sendTuesdayPrayer, fireSundayCron, fireMondayCron, fireTuesdayCron } = require("./tuesday-prayer");
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
@@ -26,7 +26,9 @@ app.get("/", (req, res) => {
       "GET  /health — Health check",
       "GET  /products — Product catalog",
       "GET  /pipelines — Pipeline stage config",
-      "POST /prayer/tuesday — Send Tuesday prayer email+SMS to all prayer-request contacts"
+      "POST /prayer/sunday  — Sunday save-the-date blast to all contacts",
+      "POST /prayer/monday  — Monday reminder blast to all contacts",
+      "POST /prayer/tuesday — Tuesday night blast to all contacts"
     ]
   });
 });
@@ -173,28 +175,30 @@ function selectNurtureSequence(c) {
   return "prayer-to-tree";
 }
 
-// Tuesday Prayer — bulk email + SMS to all prayer-request contacts
+// 3-Day Prayer Sequence routes
+app.post("/prayer/sunday",  sendSundayPrayer);
+app.post("/prayer/monday",  sendMondayPrayer);
 app.post("/prayer/tuesday", sendTuesdayPrayer);
 
-// ─── CRON: Every Tuesday at 12:00 PM ET (17:00 UTC) ─────────────────────────
-// Automatically sends Tuesday prayer email + SMS to all prayer-request contacts
-cron.schedule("0 17 * * 2", async () => {
-  console.log("[CRON] Tuesday Prayer — auto-firing at 12:00 PM ET");
-  const zoomLink = process.env.TUESDAY_ZOOM_LINK || "https://us06web.zoom.us/meeting/register/gxS5Y774S4quGKfKbzz6Ag";
-  try {
-    // Simulate a req/res to reuse the handler
-    const mockReq = { body: { zoomLink, tagFilter: "prayer-request", sendSMS: true }, query: {} };
-    const mockRes = {
-      json: (data) => console.log(`[CRON] Tuesday Prayer result:`, JSON.stringify(data.summary || data)),
-      status: (code) => ({ json: (data) => console.error(`[CRON] Error ${code}:`, data) })
-    };
-    await sendTuesdayPrayer(mockReq, mockRes);
-  } catch (err) {
-    console.error("[CRON] Tuesday Prayer failed:", err.message);
-  }
+// ─── CRON: 3-Day Prayer Sequence (all times 12:00 PM ET) ─────────────────────
+// Sunday  = cron day 0, Monday = day 1, Tuesday = day 2
+// 12:00 PM ET = 17:00 UTC
+cron.schedule("0 17 * * 0", async () => {
+  console.log("[CRON] Sunday Prayer Blast — 12:00 PM ET");
+  try { await fireSundayCron(); } catch (e) { console.error("[CRON] Sunday error:", e.message); }
 }, { timezone: "America/New_York" });
 
-console.log("⏰ Cron: Tuesday Prayer scheduled for every Tuesday at 12:00 PM ET");
+cron.schedule("0 17 * * 1", async () => {
+  console.log("[CRON] Monday Prayer Blast — 12:00 PM ET");
+  try { await fireMondayCron(); } catch (e) { console.error("[CRON] Monday error:", e.message); }
+}, { timezone: "America/New_York" });
+
+cron.schedule("0 17 * * 2", async () => {
+  console.log("[CRON] Tuesday Prayer Blast — 12:00 PM ET");
+  try { await fireTuesdayCron(); } catch (e) { console.error("[CRON] Tuesday error:", e.message); }
+}, { timezone: "America/New_York" });
+
+console.log("⏰ Cron: 3-Day Prayer Sequence — Sunday, Monday, Tuesday at 12:00 PM ET");
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3000;
