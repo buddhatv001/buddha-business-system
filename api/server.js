@@ -4,6 +4,7 @@
  */
 require("dotenv").config({ path: require("path").join(__dirname, "../config/.env") });
 const express = require("express");
+const cron = require("node-cron");
 const { classifyApplication } = require("./classifier");
 const { buildGHLPayload } = require("./ghl-formatter");
 const { selectPrayerTemplate } = require("./prayer-router");
@@ -174,6 +175,27 @@ function selectNurtureSequence(c) {
 
 // Tuesday Prayer — bulk email + SMS to all prayer-request contacts
 app.post("/prayer/tuesday", sendTuesdayPrayer);
+
+// ─── CRON: Every Tuesday at 12:00 PM ET (17:00 UTC) ─────────────────────────
+// Automatically sends Tuesday prayer email + SMS to all prayer-request contacts
+cron.schedule("0 17 * * 2", async () => {
+  console.log("[CRON] Tuesday Prayer — auto-firing at 12:00 PM ET");
+  const zoomLink = process.env.TUESDAY_ZOOM_LINK || "https://zoom.us/j/buddhatemple";
+  try {
+    // Simulate a req/res to reuse the handler
+    const mockReq = { body: { zoomLink, tagFilter: "prayer-request", sendSMS: true }, query: {} };
+    const mockRes = {
+      json: (data) => console.log(`[CRON] Tuesday Prayer result:`, JSON.stringify(data.summary || data)),
+      status: (code) => ({ json: (data) => console.error(`[CRON] Error ${code}:`, data) })
+    };
+    await sendTuesdayPrayer(mockReq, mockRes);
+  } catch (err) {
+    console.error("[CRON] Tuesday Prayer failed:", err.message);
+  }
+}, { timezone: "America/New_York" });
+
+console.log("⏰ Cron: Tuesday Prayer scheduled for every Tuesday at 12:00 PM ET");
+// ─────────────────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
