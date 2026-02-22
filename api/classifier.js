@@ -45,7 +45,7 @@ Additional Notes: ${applicationData.additionalNotes || applicationData.notes || 
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5-20251001",  // HAIKU: routine JSON classification
-    max_tokens: 1000,
+    max_tokens: 200,  // Classification only needs a short JSON response
     system: CLASSIFIER_SYSTEM_PROMPT,
     messages: [{ role: "user", content: userMessage }]
   });
