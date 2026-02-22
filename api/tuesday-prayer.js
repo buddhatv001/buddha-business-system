@@ -104,13 +104,18 @@ function makeRequest(options, body) {
  */
 async function getPrayerContacts(tagFilter) {
   const contacts = [];
-  let page = 1;
+  let startAfterId = null;
   let hasMore = true;
+  let page = 0;
 
   while (hasMore) {
+    page++;
+    let path = `/contacts/?locationId=${GHL_LOCATION_ID}&limit=100`;
+    if (startAfterId) path += `&startAfterId=${startAfterId}`;
+
     const options = {
       hostname: "services.leadconnectorhq.com",
-      path: `/contacts/?locationId=${GHL_LOCATION_ID}&limit=100&page=${page}`,
+      path,
       method: "GET",
       headers: {
         Authorization: `Bearer ${GHL_API_KEY}`,
@@ -121,25 +126,37 @@ async function getPrayerContacts(tagFilter) {
 
     const result = await makeRequest(options);
     const batch = result.body.contacts || [];
+    const total = result.body.meta?.total || 0;
 
-    // Filter contacts that have the prayer-request tag AND have an email
+    console.log(`[PRAYER FETCH] Page ${page}: ${batch.length} contacts (total: ${total})`);
+
+    // Filter: must have valid email; optionally filter by tag
     const filtered = batch.filter(c => {
-      const hasPrayerTag = c.tags && c.tags.includes("prayer-request");
       const hasEmail = c.email && c.email.includes("@");
-      if (tagFilter === "all") return hasEmail;
-      return hasPrayerTag && hasEmail;
+      if (!hasEmail) return false;
+      if (tagFilter === "all") return true;
+      // Match any prayer/healing/hospital related tag
+      const tags = (c.tags || []).map(t => (t || "").toLowerCase());
+      return tags.some(t =>
+        t.includes("prayer") ||
+        t.includes("health") ||
+        t.includes("healing") ||
+        t.includes("spirit") ||
+        t.includes("hospital") ||
+        t.includes("new-prospect")
+      );
     });
 
     contacts.push(...filtered);
 
-    const total = result.body.meta?.total || 0;
-    if (contacts.length >= total || batch.length === 0) {
+    if (batch.length < 100 || contacts.length >= total) {
       hasMore = false;
     } else {
-      page++;
+      startAfterId = batch[batch.length - 1].id;
     }
   }
 
+  console.log(`[PRAYER FETCH] Done — ${contacts.length} eligible contacts across ${page} pages`);
   return contacts;
 }
 
