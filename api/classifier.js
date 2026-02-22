@@ -44,7 +44,7 @@ Tree Interest: ${applicationData.treeInterest || applicationData.tree_interest |
 Additional Notes: ${applicationData.additionalNotes || applicationData.notes || "None"}`;
 
   const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-haiku-4-5-20251001",  // HAIKU: routine JSON classification
     max_tokens: 1000,
     system: CLASSIFIER_SYSTEM_PROMPT,
     messages: [{ role: "user", content: userMessage }]
