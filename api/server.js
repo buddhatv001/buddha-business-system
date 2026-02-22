@@ -180,7 +180,7 @@ app.post("/prayer/tuesday", sendTuesdayPrayer);
 // Automatically sends Tuesday prayer email + SMS to all prayer-request contacts
 cron.schedule("0 17 * * 2", async () => {
   console.log("[CRON] Tuesday Prayer — auto-firing at 12:00 PM ET");
-  const zoomLink = process.env.TUESDAY_ZOOM_LINK || "https://zoom.us/j/buddhatemple";
+  const zoomLink = process.env.TUESDAY_ZOOM_LINK || "https://us06web.zoom.us/meeting/register/gxS5Y774S4quGKfKbzz6Ag";
   try {
     // Simulate a req/res to reuse the handler
     const mockReq = { body: { zoomLink, tagFilter: "prayer-request", sendSMS: true }, query: {} };

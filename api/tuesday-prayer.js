@@ -15,7 +15,7 @@ const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID;
 const GHL_FROM_EMAIL = process.env.GHL_FROM_EMAIL || "buddhabrainai@gmail.com";
 const GHL_FROM_NAME = process.env.GHL_FROM_NAME || "Buddha Digital Temple";
 
-const DEFAULT_ZOOM_LINK = process.env.TUESDAY_ZOOM_LINK || "https://zoom.us/j/buddhatemple";
+const DEFAULT_ZOOM_LINK = process.env.TUESDAY_ZOOM_LINK || "https://us06web.zoom.us/meeting/register/gxS5Y774S4quGKfKbzz6Ag";
 const WHATSAPP_GROUP = "https://chat.whatsapp.com/BQSLWdSkNJILBwAOJwN8Ru";
 
 /**
